@@ -1,20 +1,21 @@
 /** @type {import ("../../typings/phaser")} */
 
-class Kermit extends Phaser.Scene{
+class Tweety extends Phaser.Scene{
     constructor(){
-        super("frogScene");
+        super("birdScene");
     }
 
     preload(){
-        //temp frog sprite borrowed from internet
-        this.load.image('frog',"./assets/step4.jpg")
+        
+        //temp bird image from http://clipart-library.com/clipart/8cEb9bjXi.htm
+        this.load.image('bird',"./assets/Bird.png")
         this.load.image('swamp', "./assets/swamp.png")
         this.load.image('floor','./assets/checkerboard.png')
         
-        //Jumping from Leszek_Szary's freesound account @https://freesound.org/people/Leszek_Szary/sounds/172205/
+        //wingflap from Adam_N's freesound account @https://freesound.org/people/Adam_N/sounds/330967/
         //Used under the creative commons 0 Liecense
         //it's temporary anyway.
-        this.load.audio('jump', './assets/jumping.wav')
+        this.load.audio('flap', './assets/wingflap.wav')
 
     }
 
@@ -32,9 +33,6 @@ class Kermit extends Phaser.Scene{
             },
             fixedWidth: 0
         }
-
-        //set scene gravity
-        this.physics.world.gravity.y = 250;
         
         //set backgound
         this.swamp = this.add.tileSprite(0,0,640,480,'swamp').setOrigin(0);
@@ -47,38 +45,26 @@ class Kermit extends Phaser.Scene{
 
 
         //create player character using frog instance
-        this.player = new Frog(this, game.config.width/2,200, 'frog').setScale(.25);
+        this.player = new Bird(this, game.config.width/2,200, 'bird').setScale(.1);
         
         //enable physics for sprite
         this.physics.world.enable(this.player);
         
         //set bounce and worldBound collision
         this.player.setBounce(0.2);
-        this.player.body.onCollide=true;
-        this.player.body.onWorldBounds=true;
         this.player.setCollideWorldBounds(true);
 
         //set platform collision, reset inAir trigger on collision
-        this.physics.add.collider(this.player,this.ground, ()=>{
-            this.player.reset();
-        }, null, this);
+        this.physics.add.collider(this.player,this.ground);
 
-
-        this.callback = function(body, blockedUp, blockedDown, blockedLeft, blockedRight){
-            if(blockedDown){
-                console.log('boop');
-                this.scene.start('birdScene');
-            }
-        }
-        
-        this.physics.world.on('worldbounds', this.callback ,this);
 
         //key inputs
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-        keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
 
-        this.add.text(0,0, "Kermit",menuConfig).setOrigin(0);
+        this.add.text(0,0, "Tweety",menuConfig).setOrigin(0);
 
     }
     update(){
@@ -88,6 +74,3 @@ class Kermit extends Phaser.Scene{
 
     }
 }
-
-
-

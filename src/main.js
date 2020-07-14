@@ -10,11 +10,11 @@ let config = {
             debug: true
         }
     },
-    scene: [Kermit]
+    scene: [Kermit,Tweety]
 }
 
 let game = new Phaser.Game(config);
 
 
 //keyboard bindings
-let keySPACE, keyLEFT, keyRIGHT;
+let keySPACE, keyLEFT, keyRIGHT, keyUP, keyDOWN;
