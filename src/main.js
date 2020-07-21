@@ -10,7 +10,7 @@ let config = {
             debug: true
         }
     },
-    scene: [Kermit,Tweety]
+    scene: [Kermit]
 }
 
 let game = new Phaser.Game(config);

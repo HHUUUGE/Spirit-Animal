@@ -1,3 +1,5 @@
+//Had to cut will get rid of before final version
+
 /** @type {import ("../../../typings/phaser")} */
 
 class Bird extends Phaser.Physics.Arcade.Sprite{
