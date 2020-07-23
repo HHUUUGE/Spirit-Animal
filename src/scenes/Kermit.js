@@ -93,7 +93,7 @@ class Kermit extends Phaser.Scene{
         this.cameras.main.setLerp(.5,0);
 
         //silly scene text for debug
-        this.add.text(0,0, "Kermit",menuConfig).setOrigin(0);
+        //this.add.text(0,0, "Kermit",menuConfig).setOrigin(0);
 
     }
     update(){

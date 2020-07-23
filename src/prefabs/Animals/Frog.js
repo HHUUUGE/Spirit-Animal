@@ -16,15 +16,21 @@ class Frog extends Phaser.Physics.Arcade.Sprite{
         //Set ground accelleration
         if (this.onGround){
             if(keyLEFT.isDown){
+                if (this.body.velocity.x==0 && Phaser.Input.Keyboard.JustDown(keyLEFT)){
+                    this.setVelocityX(-10);
+                }
                 this.setAccelerationX(-100);
             }
             else if (keyRIGHT.isDown){
+                if (this.body.velocity.x==0 && Phaser.Input.Keyboard.JustDown(keyRIGHT)){
+                    this.setVelocityX(10);
+                }
                 this.setAccelerationX(100);
             }
             //Set drag on ground when not holding left or right
             else{
                 this.setAccelerationX(0);
-                this.setDragX(75);
+                this.setDragX(90);
             }
         }
         //Set air movement
