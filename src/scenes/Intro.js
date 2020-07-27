@@ -177,6 +177,9 @@ class Intro extends Phaser.Scene{
         //move offscreen to start game
         if (this.player.body.position.x > game.config.width || this.player.body.position.x + this.player.width < 0){
             this.startMusic.stop();
+            while(this.startMusic.isPlaying){
+                this.startMusic.stop();
+            }
             this.scene.start('frogScene');
         }
     }

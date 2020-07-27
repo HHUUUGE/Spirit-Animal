@@ -101,10 +101,16 @@ class End extends Phaser.Scene{
         //move offscreen to start game
         if (this.player.body.position.x > game.config.width){
             this.endMusic.stop();
+            while(this.endMusic.isPlaying){
+                this.endMusic.stop();
+            }
             this.scene.start('frogScene');
         }
         if(this.player.body.position.x + this.player.width < 0){
             this.endMusic.stop();
+            while(this.endMusic.isPlaying){
+                this.endMusic.stop();
+            }
             this.scene.start('introScene');
         }
         

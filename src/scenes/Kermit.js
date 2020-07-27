@@ -92,6 +92,8 @@ class Kermit extends Phaser.Scene{
 
         this.physics.add.overlap(this.player,this.goal, function reachedEnd(player,goal){
             this.bgm.stop();
+            while(this.bgm.isPlaying){
+            }
             this.scene.start('endScene');
         },null,this);
 
@@ -106,6 +108,9 @@ class Kermit extends Phaser.Scene{
         //player falls off screen -> restart scene
         if (this.player.body.position.y>game.config.height){
             this.bgm.stop();
+            while(this.bgm.isPlaying){
+                this.bgm.stop();
+            }
             this.scene.restart();
         }
 
