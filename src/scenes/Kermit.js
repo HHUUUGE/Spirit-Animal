@@ -7,20 +7,6 @@ class Kermit extends Phaser.Scene{
         super("frogScene");
     }
 
-    preload(){
-        //temp frog sprite borrowed from internet
-        this.load.atlas('witch', './assets/Character.png', './assets/Character.json');
-        this.load.image('frog',"./assets/step4.jpg")
-        this.load.image('swamp', "./assets/swamp.png")
-        this.load.image('platforms','./assets/swamp assets.png')
-        this.load.tilemapTiledJSON('swamp_map', './assets/swamp.json')
-        //Jumping from Leszek_Szary's freesound account @https://freesound.org/people/Leszek_Szary/sounds/172205/
-        //Used under the creative commons 0 Liecense
-        //it's temporary anyway.
-        this.load.audio('jump', './assets/jumping.wav')
-
-    }
-
     create(){
 
         let menuConfig = {
@@ -35,7 +21,7 @@ class Kermit extends Phaser.Scene{
             },
             fixedWidth: 0
         }
-        
+
         //create tilemap
         const map = this.add.tilemap("swamp_map");
         const tileset =  map.addTilesetImage('swampAssets', 'platforms');
@@ -45,6 +31,9 @@ class Kermit extends Phaser.Scene{
 
         //set scene gravity
         this.physics.world.gravity.y = 250;
+
+        this.bgm=this.sound.add('LevelTrack',{loop:true});
+        this.bgm.play();
         
         //set backgound
         this.swamp = this.add.tileSprite(0,0,game.config.width,game.config.height,'swamp').setOrigin(0);
@@ -65,23 +54,29 @@ class Kermit extends Phaser.Scene{
         //give platform tiles collision
         platformTiles.setCollisionByProperty({collides: true});
 
-
         //create player character using frog instance
-        this.player = new Frog(this, spawn.x, spawn.y, 'witch','Idle000');
-        
+        this.player = new Frog(this, spawn.x, spawn.y, 'witch','Idle01');
+
         //enable physics for sprite
         this.physics.world.enable(this.player);
-        this.player.setMaxVelocity(500)
+        this.player.setMaxVelocity(200);
+
         //set bounce and player collision
         this.player.setBounce(0.1);
         this.player.body.onCollide=true;
 
-
         //set platform collision, reset inAir trigger on collision
-        this.physics.add.collider(this.player, platformTiles);
-        //this.physics.world.setBoundsCollision(true,true,true,false);
+        this.physics.add.collider(this.player, platformTiles, function touchDown(player,platform){
+            if(!player.onGround){
+                player.reset();
+            }
+        });
+
+        //making every worldbound other than the floor collidable
         this.physics.world.setBounds(0,0,this.map.widthInPixels,this.map.heightInPixels,true, true, true, false);
         this.player.setCollideWorldBounds(true);
+
+
         //key inputs
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
@@ -92,8 +87,15 @@ class Kermit extends Phaser.Scene{
         this.cameras.main.startFollow(this.player);
         this.cameras.main.setLerp(.5,0);
 
-        //silly scene text for debug
-        this.add.text(0,0, "Kermit",menuConfig).setOrigin(0);
+        this.goal= this.add.rectangle(3100,431,157,32,0xff0000,0);
+        this.physics.add.existing(this.goal,true);
+
+        this.physics.add.overlap(this.player,this.goal, function reachedEnd(player,goal){
+            this.bgm.stop();
+            this.scene.start('endScene');
+        },null,this);
+
+
 
     }
     update(){
@@ -101,30 +103,14 @@ class Kermit extends Phaser.Scene{
         //player update loop
         this.player.update();
 
-        //collision with tiles
-        if (this.player.body.blocked.down){
-            this.player.reset();
-        }
-
         //player falls off screen -> restart scene
         if (this.player.body.position.y>game.config.height){
+            this.bgm.stop();
             this.scene.restart();
         }
 
-        //player about to go off screen -> set y velocity to 0
-        // if (this.player.body.position.y<0){
-        //     this.player.setAccelerationY(0);
-        //     this.player.setVelocityY(0);
-        // }
-
-        //player about to run off right side of scene -> set x velocity to 0
-        // if (this.player.body.position.x + this.player.width>this.map.widthInPixels || this.player.body.position.x < 0){
-        //     //this.player.setAccelerationX(0);
-        //     this.player.setVelocityX(0);
-        // }
-
         //carmera scrolls -> background scrolls proportionally
-        this.swamp.tilePositionX=this.cameras.main.scrollX*.3
+        this.swamp.tilePositionX=this.cameras.main.scrollX
         
 
     }
