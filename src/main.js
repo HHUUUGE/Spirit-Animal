@@ -16,8 +16,7 @@ let config = {
     height: 480,
     physics: {
         default: 'arcade',
-        // arcade:{
-        // }
+
     },
     scene: [Intro,Kermit,End]
 }
